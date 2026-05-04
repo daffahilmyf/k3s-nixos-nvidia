@@ -45,8 +45,10 @@ Add-on toggles live in `inventory/kubernetes.nix`.
 Current add-on modules:
 
 - `cert-manager`
-- `ingress-nginx`
 - `local-path-storage`
 - `nvidia-device-plugin`
+- `traefik`
 
 The NVIDIA device plugin is the first real static manifest. Its image is configured in `inventory/kubernetes.nix`.
+
+Traefik is selected as the ingress controller, but the bundled k3s Traefik remains disabled so it can be installed and upgraded explicitly.

@@ -79,7 +79,7 @@ Add-ons are intentionally separate from base k3s. Enable them in `inventory/kube
 Suggested order:
 
 1. NVIDIA device plugin, if GPU workloads are needed. This is currently enabled in `inventory/kubernetes.nix`.
-2. Load balancer or ingress.
+2. Load balancer and Traefik ingress.
 3. cert-manager.
 4. Storage.
 5. Observability.

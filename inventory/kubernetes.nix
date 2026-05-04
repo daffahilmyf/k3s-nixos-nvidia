@@ -17,7 +17,10 @@
 
   addons = {
     certManager.enable = false;
-    ingressNginx.enable = false;
+    traefik = {
+      enable = true;
+      namespace = "traefik";
+    };
     nvidiaDevicePlugin = {
       enable = true;
       image = "nvcr.io/nvidia/k8s-device-plugin:v0.19.0";

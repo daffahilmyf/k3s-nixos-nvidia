@@ -132,7 +132,7 @@ Role profiles enable k3s automatically:
 - `cpu-worker-1`: k3s agent.
 - `gpu-worker-1`: k3s agent with NVIDIA container toolkit, GPU labels, and a GPU taint.
 
-The k3s module disables bundled components listed in `inventory/kubernetes.nix` so ingress and load balancing can be installed explicitly later.
+The k3s module disables bundled components listed in `inventory/kubernetes.nix` so Traefik ingress and load balancing can be installed explicitly later.
 
 Static node records are generated as both short names and `home.arpa` names, for example `control-plane` and `control-plane.home.arpa`.
 
