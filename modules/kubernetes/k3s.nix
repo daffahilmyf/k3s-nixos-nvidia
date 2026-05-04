@@ -117,8 +117,7 @@ in
 
     services.k3s = {
       enable = true;
-      package = cfg.package;
-      role = cfg.role;
+      inherit (cfg) package role;
       clusterInit = isServer && cfg.clusterInit;
       disable = lib.mkIf isServer cfg.disable;
       serverAddr = lib.mkIf isAgent cfg.serverAddr;
@@ -127,7 +126,7 @@ in
       );
       nodeLabel = cfg.nodeLabels;
       nodeTaint = cfg.nodeTaints;
-      extraFlags = cfg.extraFlags;
+      inherit (cfg) extraFlags;
     };
 
     networking.firewall = {

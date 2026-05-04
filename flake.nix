@@ -34,7 +34,7 @@
       kubernetes = import ./inventory/kubernetes.nix { inherit pkgs; };
       homelabCli = import ./lib/homelab-cli.nix {
         inherit pkgs nodes systemSettings;
-        lib = nixpkgs.lib;
+        inherit (nixpkgs) lib;
         network = lan;
       };
       mkNode = import ./lib/mk-node.nix {
