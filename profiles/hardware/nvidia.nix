@@ -1,10 +1,13 @@
 { config, lib, pkgs, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
     graphics.enable = true;
+    nvidia-container-toolkit.enable = true;
     nvidia = {
       modesetting.enable = true;
       open = false;

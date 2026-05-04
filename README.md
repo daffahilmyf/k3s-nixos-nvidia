@@ -29,6 +29,7 @@ hosts/
 modules/
   core/
   integrations/
+  kubernetes/
   networking/
   nix/
   security/
@@ -44,6 +45,7 @@ secrets/
 - `modules` contains shared NixOS modules used by every host.
 - `modules/core` contains base OS defaults, boot, locale, and common CLI packages.
 - `modules/integrations` wires external NixOS modules such as Home Manager and sops-nix.
+- `modules/kubernetes` contains k3s configuration and Kubernetes host requirements.
 - `modules/networking` contains networkd, DHCP, DNS, and firewall defaults.
 - `modules/nix` contains Nix daemon, flakes, trusted users, and garbage collection settings.
 - `modules/security` contains SSH, sudo, and user configuration.
@@ -83,3 +85,15 @@ sops secrets/gpu-worker-1.yaml
 ```
 
 Each node generates its local age key at `/var/lib/sops-nix/key.txt`.
+
+For k3s nodes, include the shared cluster token as `k3s-token` in each host secret file.
+
+## Kubernetes
+
+Role profiles enable k3s automatically:
+
+- `control-plane`: k3s server with embedded etcd cluster initialization.
+- `cpu-worker-1`: k3s agent.
+- `gpu-worker-1`: k3s agent with NVIDIA container toolkit, GPU labels, and a GPU taint.
+
+The k3s module disables bundled `servicelb` and `traefik` by default so ingress and load balancing can be installed explicitly later.

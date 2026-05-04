@@ -6,6 +6,7 @@ Reusable NixOS modules imported by every host.
 
 - `core`: baseline operating system behavior for all nodes.
 - `integrations`: glue for external module systems such as Home Manager and sops-nix.
+- `kubernetes`: k3s cluster configuration and Kubernetes host requirements.
 - `networking`: network stack, DNS, DHCP, and firewall defaults.
 - `nix`: Nix daemon, flakes, trusted users, cache, and garbage collection settings.
 - `security`: users, sudo, SSH, and access control.
