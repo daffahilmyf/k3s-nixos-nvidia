@@ -28,50 +28,18 @@
       pkgs = nixpkgs.legacyPackages.${system};
       lan = import ./inventory/network.nix;
       nodes = import ./inventory/nodes.nix;
-
-      roleModules = {
-        default = [
-          ./profiles/roles/default.nix
-        ];
-        control-plane = [
-          ./profiles/roles/control-plane.nix
-        ];
-        cpu-worker = [
-          ./profiles/roles/cpu-worker.nix
-        ];
-        gpu-worker = [
-          ./profiles/roles/gpu-worker.nix
-          ./profiles/hardware/nvidia.nix
-        ];
+      mkNode = import ./lib/mk-node.nix {
+        inherit
+          inputs
+          nixpkgs
+          home-manager
+          sops-nix
+          system
+          username
+          lan
+          nodes
+          ;
       };
-
-      staticNodes = nixpkgs.lib.mapAttrs (_: node: node.staticIPv4) (
-        nixpkgs.lib.filterAttrs (_: node: node ? staticIPv4) nodes
-      );
-
-      mkNode =
-        hostname:
-        node:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs username hostname staticNodes;
-            inherit (node) role;
-          };
-          modules = [
-            home-manager.nixosModules.home-manager
-            sops-nix.nixosModules.sops
-            ./modules
-            ./hosts/${hostname}
-          ]
-          ++ nixpkgs.lib.optional (node ? staticIPv4) {
-            homelab.network.static = lan // {
-              enable = true;
-              address = node.staticIPv4;
-            };
-          }
-          ++ roleModules.${node.role};
-        };
     in
     {
       formatter.${system} = pkgs.nixfmt-rfc-style;
