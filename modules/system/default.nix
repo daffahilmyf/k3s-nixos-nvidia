@@ -9,6 +9,7 @@
     ./options.nix
     ./packages.nix
     ./security.nix
+    ./sops.nix
     ./ssh.nix
     ./users.nix
   ];

@@ -1,0 +1,29 @@
+keys:
+  - &admin_daffa age1replace-this-with-your-admin-age-public-key
+  - &control_plane age1replace-this-with-control-plane-age-public-key
+  - &cpu_worker_1 age1replace-this-with-cpu-worker-1-age-public-key
+  - &gpu_worker_1 age1replace-this-with-gpu-worker-1-age-public-key
+
+creation_rules:
+  - path_regex: secrets/control-plane\.yaml$
+    key_groups:
+      - age:
+          - *admin_daffa
+          - *control_plane
+
+  - path_regex: secrets/cpu-worker-1\.yaml$
+    key_groups:
+      - age:
+          - *admin_daffa
+          - *cpu_worker_1
+
+  - path_regex: secrets/gpu-worker-1\.yaml$
+    key_groups:
+      - age:
+          - *admin_daffa
+          - *gpu_worker_1
+
+  - path_regex: secrets/default\.yaml$
+    key_groups:
+      - age:
+          - *admin_daffa
