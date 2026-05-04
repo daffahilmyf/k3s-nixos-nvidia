@@ -123,10 +123,7 @@ in
       disable = lib.mkIf isServer cfg.disable;
       serverAddr = lib.mkIf isAgent cfg.serverAddr;
       tokenFile = lib.mkIf (hasHostSecrets || isAgent) (
-        if hasHostSecrets then
-          config.sops.secrets.${tokenSecretName}.path
-        else
-          cfg.tokenFile
+        if hasHostSecrets then config.sops.secrets.${tokenSecretName}.path else cfg.tokenFile
       );
       nodeLabel = cfg.nodeLabels;
       nodeTaint = cfg.nodeTaints;
@@ -134,15 +131,14 @@ in
     };
 
     networking.firewall = {
-      allowedTCPPorts =
-        [
-          10250
-        ]
-        ++ lib.optionals isServer [
-          6443
-          2379
-          2380
-        ];
+      allowedTCPPorts = [
+        10250
+      ]
+      ++ lib.optionals isServer [
+        6443
+        2379
+        2380
+      ];
 
       allowedUDPPorts = [
         8472

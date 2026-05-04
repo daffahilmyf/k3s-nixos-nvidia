@@ -30,19 +30,24 @@ let
   };
 
   modulesForRole =
-    role:
-    roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
+    role: roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
 in
 
-hostname:
-node:
+hostname: node:
 nixpkgs.lib.nixosSystem {
   inherit system;
   specialArgs = {
     kubernetesInventory = kubernetes;
     networkInventory = lan;
     securityInventory = security;
-    inherit inputs username hostname staticNodes systemSettings users;
+    inherit
+      inputs
+      username
+      hostname
+      staticNodes
+      systemSettings
+      users
+      ;
     inherit (node) role;
   };
   modules = [

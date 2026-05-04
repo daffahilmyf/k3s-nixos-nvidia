@@ -39,16 +39,13 @@ let
   );
 
   nodeCase = lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (
-      hostname: node:
-      ''
-        ${hostname})
-          NODE_IP="${node.staticIPv4}"
-          NODE_ROLE="${node.role}"
-          NODE_FQDN="${hostname}.${domain}"
-          ;;
-      ''
-    ) staticNodes
+    lib.mapAttrsToList (hostname: node: ''
+      ${hostname})
+        NODE_IP="${node.staticIPv4}"
+        NODE_ROLE="${node.role}"
+        NODE_FQDN="${hostname}.${domain}"
+        ;;
+    '') staticNodes
   );
 
   script = pkgs.writeShellScript "homelab" ''

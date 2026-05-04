@@ -61,6 +61,6 @@ in
               - name: device-plugin
                 hostPath:
                   path: /var/lib/kubelet/device-plugins
-      '';
+    '';
   };
 }
