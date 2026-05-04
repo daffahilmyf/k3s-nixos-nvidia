@@ -26,36 +26,8 @@
       system = "x86_64-linux";
       username = "daffa";
       pkgs = nixpkgs.legacyPackages.${system};
-      lan = {
-        interface = "en* eth*";
-        prefixLength = 24;
-        gateway = "192.168.100.1";
-        dns = [
-          "1.1.1.1"
-          "8.8.8.8"
-        ];
-      };
-
-      nodes = {
-        default = {
-          role = "default";
-        };
-
-        control-plane = {
-          staticIPv4 = "192.168.100.155";
-          role = "control-plane";
-        };
-
-        cpu-worker-1 = {
-          staticIPv4 = "192.168.100.156";
-          role = "cpu-worker";
-        };
-
-        gpu-worker-1 = {
-          staticIPv4 = "192.168.100.157";
-          role = "gpu-worker";
-        };
-      };
+      lan = import ./inventory/network.nix;
+      nodes = import ./inventory/nodes.nix;
 
       roleModules = {
         default = [
