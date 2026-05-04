@@ -20,6 +20,15 @@ let
     nixpkgs.lib.filterAttrs (_: node: node ? staticIPv4) nodes
   );
 
+  staticNetworkDefaults = {
+    inherit (lan)
+      interface
+      prefixLength
+      gateway
+      dns
+      ;
+  };
+
   modulesForRole =
     role:
     roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
@@ -43,7 +52,7 @@ nixpkgs.lib.nixosSystem {
     ../hosts/${hostname}
   ]
   ++ nixpkgs.lib.optional (node ? staticIPv4) {
-    homelab.network.static = lan // {
+    homelab.network.static = staticNetworkDefaults // {
       enable = true;
       address = node.staticIPv4;
     };
