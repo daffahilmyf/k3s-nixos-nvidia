@@ -140,3 +140,8 @@ The Kubernetes API endpoint defaults to `https://control-plane.home.arpa:6443`.
 The k3s package is selected in `inventory/kubernetes.nix`, currently as `pkgs.k3s` from the pinned nixpkgs input so all nodes use the same version.
 
 The k3s token secret name, fallback token file, and disabled bundled components are also configured in `inventory/kubernetes.nix`.
+
+More detail:
+
+- `docs/bootstrap.md`
+- `docs/secrets.md`
