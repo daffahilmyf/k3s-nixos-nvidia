@@ -17,6 +17,27 @@ sudo nixos-rebuild switch --flake .#cpu-worker-1
 sudo nixos-rebuild switch --flake .#gpu-worker-1
 ```
 
+## CLI
+
+Enter the development shell to get the generated `homelab` command with Bash completion:
+
+```sh
+nix develop
+```
+
+Useful commands:
+
+```sh
+homelab nodes
+homelab ssh control-plane
+homelab ping cpu-worker-1
+homelab status gpu-worker-1 k3s
+homelab logs control-plane k3s
+homelab kubectl get nodes -o wide
+homelab dry-build cpu-worker-1
+homelab rebuild gpu-worker-1 switch
+```
+
 ## Layout
 
 ```text

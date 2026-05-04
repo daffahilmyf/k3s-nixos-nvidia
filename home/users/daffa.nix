@@ -6,6 +6,7 @@
   programs = {
     bash = {
       enable = true;
+      enableCompletion = true;
       shellAliases = {
         ll = "ls -alh";
         rebuild = "sudo nixos-rebuild switch --flake /etc/nixos";
