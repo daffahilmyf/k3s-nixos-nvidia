@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ systemSettings, ... }:
 
 {
-  system.stateVersion = "25.11";
+  system.stateVersion = systemSettings.stateVersion;
 
   documentation = {
     enable = true;
@@ -10,12 +10,12 @@
   };
 
   environment.variables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
+    EDITOR = systemSettings.editor;
+    VISUAL = systemSettings.editor;
   };
 
   services.fstrim.enable = true;
   services.fwupd.enable = true;
 
-  time.timeZone = "Asia/Jakarta";
+  time.timeZone = systemSettings.timeZone;
 }

@@ -3,6 +3,7 @@
   lib,
   network,
   nodes,
+  systemSettings,
 }:
 
 let
@@ -13,6 +14,7 @@ let
   );
   defaultControlPlane = if controlPlaneNames == [ ] then "" else lib.head controlPlaneNames;
   domain = network.domain or "home.arpa";
+  flakePath = systemSettings.flakePath or "/etc/nixos";
 
   nodeList = lib.concatStringsSep " " nodeNames;
   commandList = lib.concatStringsSep " " [
@@ -166,13 +168,13 @@ let
             exit 2
             ;;
         esac
-        exec ${pkgs.openssh}/bin/ssh "$node" sudo nixos-rebuild "$action" --flake "/etc/nixos#$node"
+        exec ${pkgs.openssh}/bin/ssh "$node" sudo nixos-rebuild "$action" --flake "${flakePath}#$node"
         ;;
 
       dry-build)
         require_node "$@"
         node="$1"
-        exec ${pkgs.openssh}/bin/ssh "$node" sudo nixos-rebuild dry-build --flake "/etc/nixos#$node"
+        exec ${pkgs.openssh}/bin/ssh "$node" sudo nixos-rebuild dry-build --flake "${flakePath}#$node"
         ;;
 
       *)

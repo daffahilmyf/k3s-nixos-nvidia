@@ -24,13 +24,15 @@
     }:
     let
       system = "x86_64-linux";
-      username = "daffa";
       pkgs = nixpkgs.legacyPackages.${system};
       lan = import ./inventory/network.nix;
       nodes = import ./inventory/nodes.nix;
+      systemSettings = import ./inventory/system.nix;
+      users = import ./inventory/users.nix;
+      username = users.primary;
       kubernetes = import ./inventory/kubernetes.nix { inherit pkgs; };
       homelabCli = import ./lib/homelab-cli.nix {
-        inherit pkgs nodes;
+        inherit pkgs nodes systemSettings;
         lib = nixpkgs.lib;
         network = lan;
       };
@@ -45,6 +47,8 @@
           lan
           nodes
           kubernetes
+          systemSettings
+          users
           ;
       };
     in

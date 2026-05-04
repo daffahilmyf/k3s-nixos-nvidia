@@ -1,7 +1,11 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  systemSettings,
+  ...
+}:
 
 {
-  home.stateVersion = "25.11";
+  home.stateVersion = systemSettings.stateVersion;
 
   programs = {
     bash = {
@@ -9,7 +13,7 @@
       enableCompletion = true;
       shellAliases = {
         ll = "ls -alh";
-        rebuild = "sudo nixos-rebuild switch --flake /etc/nixos";
+        rebuild = "sudo nixos-rebuild switch --flake ${systemSettings.flakePath}";
       };
     };
 
