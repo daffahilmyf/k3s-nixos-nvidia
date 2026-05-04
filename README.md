@@ -21,6 +21,8 @@ sudo nixos-rebuild switch --flake .#gpu-worker-1
 
 ```text
 flake.nix
+inventory/
+lib/
 hosts/
   control-plane/
   cpu-worker-1/
@@ -42,6 +44,8 @@ secrets/
 ```
 
 - `hosts/<hostname>` contains host-specific hardware and hostname wiring.
+- `inventory` contains node facts such as role and static IP address.
+- `lib` contains flake helper functions and role-to-profile mapping.
 - `modules` contains shared NixOS modules used by every host.
 - `modules/core` contains base OS defaults, boot, locale, and common CLI packages.
 - `modules/integrations` wires external NixOS modules such as Home Manager and sops-nix.
@@ -56,7 +60,7 @@ secrets/
 
 ## Adding Nodes
 
-Add a CPU worker by creating `hosts/cpu-worker-2` and adding it to `nodes` in `flake.nix`:
+Add a CPU worker by creating `hosts/cpu-worker-2` and adding it to `inventory/nodes.nix`:
 
 ```nix
 cpu-worker-2 = {
