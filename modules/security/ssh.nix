@@ -1,12 +1,18 @@
+{ securityInventory, ... }:
+
+let
+  cfg = securityInventory.ssh;
+in
+
 {
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-      KbdInteractiveAuthentication = false;
+      PasswordAuthentication = cfg.passwordAuthentication;
+      PermitRootLogin = cfg.permitRootLogin;
+      KbdInteractiveAuthentication = cfg.kbdInteractiveAuthentication;
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedTCPPorts = cfg.allowedTCPPorts;
 }

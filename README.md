@@ -68,6 +68,7 @@ secrets/
 - `inventory` contains node facts such as role and static IP address.
 - `inventory/network.nix` contains LAN settings, the `home.arpa` domain, and the Kubernetes API endpoint.
 - `inventory/kubernetes.nix` contains cluster-wide Kubernetes settings such as the k3s package.
+- `inventory/security.nix` contains SSH and sudo hardening defaults.
 - `inventory/system.nix` contains shared system defaults.
 - `inventory/users.nix` contains user inventory.
 - `lib` contains flake helper functions and role-to-profile mapping.

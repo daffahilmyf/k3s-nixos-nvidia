@@ -1,6 +1,8 @@
+{ securityInventory, ... }:
+
 {
   security = {
-    sudo.wheelNeedsPassword = false;
+    sudo.wheelNeedsPassword = securityInventory.sudo.wheelNeedsPassword;
     rtkit.enable = false;
   };
 }

@@ -8,6 +8,7 @@
   lan,
   nodes,
   kubernetes,
+  security,
   systemSettings,
   users,
 }:
@@ -31,6 +32,7 @@ nixpkgs.lib.nixosSystem {
   specialArgs = {
     kubernetesInventory = kubernetes;
     networkInventory = lan;
+    securityInventory = security;
     inherit inputs username hostname staticNodes systemSettings users;
     inherit (node) role;
   };

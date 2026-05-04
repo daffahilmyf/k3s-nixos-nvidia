@@ -29,6 +29,7 @@
       nodes = import ./inventory/nodes.nix;
       systemSettings = import ./inventory/system.nix;
       users = import ./inventory/users.nix;
+      security = import ./inventory/security.nix;
       username = users.primary;
       kubernetes = import ./inventory/kubernetes.nix { inherit pkgs; };
       homelabCli = import ./lib/homelab-cli.nix {
@@ -47,6 +48,7 @@
           lan
           nodes
           kubernetes
+          security
           systemSettings
           users
           ;
