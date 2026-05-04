@@ -40,6 +40,7 @@
           modules = [
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
+            ./modules/system
             ./hosts/${hostname}
           ] ++ extraModules;
         };
@@ -47,21 +48,34 @@
       mkControlPlane = hostname: mkNode {
         inherit hostname;
         role = "control-plane";
+        extraModules = [
+          ./profiles/roles/control-plane.nix
+        ];
       };
 
       mkDefaultHost = hostname: mkNode {
         inherit hostname;
         role = "default";
+        extraModules = [
+          ./profiles/roles/default.nix
+        ];
       };
 
       mkCpuWorker = hostname: mkNode {
         inherit hostname;
         role = "cpu-worker";
+        extraModules = [
+          ./profiles/roles/cpu-worker.nix
+        ];
       };
 
       mkGpuWorker = hostname: mkNode {
         inherit hostname;
         role = "gpu-worker";
+        extraModules = [
+          ./profiles/roles/gpu-worker.nix
+          ./profiles/hardware/nvidia.nix
+        ];
       };
     in
     {
