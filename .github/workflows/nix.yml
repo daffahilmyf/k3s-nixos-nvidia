@@ -5,10 +5,10 @@ on:
   push:
     branches:
       - main
-      - master
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   lint:
@@ -24,6 +24,9 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             experimental-features = nix-command flakes
+
+      - name: Enable Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Check formatting
         run: nix fmt -- --check .
@@ -44,6 +47,9 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             experimental-features = nix-command flakes
+
+      - name: Enable Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Check flake
         run: nix flake check --print-build-logs
@@ -69,6 +75,9 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             experimental-features = nix-command flakes
+
+      - name: Enable Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Build NixOS system closure
         run: nix build --no-link --print-build-logs ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
