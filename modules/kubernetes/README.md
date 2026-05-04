@@ -27,3 +27,9 @@ If no host secret file exists:
 - agent nodes expect a token file at `/run/secrets/k3s-token`
 
 For reproducible cluster rebuilds, prefer storing the shared token in sops for every k3s node.
+
+## API Endpoint
+
+Agent nodes use `inventory/network.nix` value `kubernetes.apiServer` as their default server URL.
+
+The current inventory points agents at `https://control-plane.home.arpa:6443`.

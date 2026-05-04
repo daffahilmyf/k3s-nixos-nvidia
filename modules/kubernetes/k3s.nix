@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  networkInventory,
   pkgs,
   ...
 }:
@@ -9,6 +10,7 @@ let
   cfg = config.homelab.k3s;
   isServer = cfg.role == "server";
   isAgent = cfg.role == "agent";
+  defaultServerAddr = networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
   sopsFile = ../../secrets + "/${config.networking.hostName}.yaml";
   hasHostSecrets = builtins.pathExists sopsFile;
 in
@@ -34,7 +36,7 @@ in
 
     serverAddr = lib.mkOption {
       type = lib.types.str;
-      default = "https://control-plane:6443";
+      default = defaultServerAddr;
       description = "k3s API server URL used by agent nodes.";
     };
 

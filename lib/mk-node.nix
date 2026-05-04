@@ -26,6 +26,7 @@ node:
 nixpkgs.lib.nixosSystem {
   inherit system;
   specialArgs = {
+    networkInventory = lan;
     inherit inputs username hostname staticNodes;
     inherit (node) role;
   };

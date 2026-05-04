@@ -45,6 +45,7 @@ secrets/
 
 - `hosts/<hostname>` contains host-specific hardware and hostname wiring.
 - `inventory` contains node facts such as role and static IP address.
+- `inventory/network.nix` contains LAN settings, the `home.arpa` domain, and the Kubernetes API endpoint.
 - `lib` contains flake helper functions and role-to-profile mapping.
 - `modules` contains shared NixOS modules used by every host.
 - `modules/core` contains base OS defaults, boot, locale, and common CLI packages.
@@ -107,3 +108,7 @@ Role profiles enable k3s automatically:
 - `gpu-worker-1`: k3s agent with NVIDIA container toolkit, GPU labels, and a GPU taint.
 
 The k3s module disables bundled `servicelb` and `traefik` by default so ingress and load balancing can be installed explicitly later.
+
+Static node records are generated as both short names and `home.arpa` names, for example `control-plane` and `control-plane.home.arpa`.
+
+The Kubernetes API endpoint defaults to `https://control-plane.home.arpa:6443`.

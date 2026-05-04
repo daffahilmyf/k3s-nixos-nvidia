@@ -1,4 +1,5 @@
 {
+  domain = "home.arpa";
   interface = "en* eth*";
   prefixLength = 24;
   gateway = "192.168.100.1";
@@ -6,4 +7,7 @@
     "1.1.1.1"
     "8.8.8.8"
   ];
+  kubernetes = {
+    apiServer = "https://control-plane.home.arpa:6443";
+  };
 }

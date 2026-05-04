@@ -1,12 +1,30 @@
 {
   config,
   lib,
+  networkInventory,
   staticNodes,
   ...
 }:
 
 let
   cfg = config.homelab.network.static;
+  domain = networkInventory.domain or null;
+  hostAliases = networkInventory.hostAliases or { };
+
+  namesFor = hostname:
+    [ hostname ] ++ lib.optional (domain != null) "${hostname}.${domain}";
+
+  nodeHosts = lib.mapAttrs' (hostname: address: {
+    name = address;
+    value = namesFor hostname;
+  }) staticNodes;
+
+  aliasHosts = lib.mapAttrs (_: aliases:
+    lib.unique (
+      aliases
+      ++ lib.optionals (domain != null) (map (alias: "${alias}.${domain}") aliases)
+    )
+  ) hostAliases;
 in
 
 {
@@ -48,11 +66,9 @@ in
     networking = {
       useDHCP = false;
       useNetworkd = true;
+      domain = lib.mkIf (domain != null) domain;
       firewall.enable = true;
-      hosts = lib.mapAttrs' (hostname: address: {
-        name = address;
-        value = [ hostname ];
-      }) staticNodes;
+      hosts = nodeHosts // aliasHosts;
     };
 
     systemd.network = {
