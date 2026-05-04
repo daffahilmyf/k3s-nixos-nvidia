@@ -25,6 +25,7 @@
     let
       system = "x86_64-linux";
       username = "daffa";
+      pkgs = nixpkgs.legacyPackages.${system};
 
       mkNode =
         {
@@ -79,6 +80,8 @@
       };
     in
     {
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
       nixosConfigurations = {
         default = mkDefaultHost "default";
 
