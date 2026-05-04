@@ -145,3 +145,4 @@ More detail:
 
 - `docs/bootstrap.md`
 - `docs/secrets.md`
+- `docs/gpu-node.md`

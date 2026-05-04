@@ -37,3 +37,16 @@ For reproducible cluster rebuilds, prefer storing the shared token in sops for e
 Agent nodes use `inventory/network.nix` value `kubernetes.apiServer` as their default server URL.
 
 The current inventory points agents at `https://control-plane.home.arpa:6443`.
+
+## Add-ons
+
+Add-on toggles live in `inventory/kubernetes.nix`.
+
+Current add-on modules:
+
+- `cert-manager`
+- `ingress-nginx`
+- `local-path-storage`
+- `nvidia-device-plugin`
+
+The NVIDIA device plugin is the first real static manifest. Its image is configured in `inventory/kubernetes.nix`.
