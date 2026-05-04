@@ -39,6 +39,7 @@ nixpkgs.lib.nixosSystem {
   specialArgs = {
     kubernetesInventory = kubernetes;
     networkInventory = lan;
+    nodeInventory = node;
     securityInventory = security;
     inherit
       inputs

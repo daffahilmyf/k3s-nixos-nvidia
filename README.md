@@ -148,3 +148,4 @@ More detail:
 - `docs/ci.md`
 - `docs/secrets.md`
 - `docs/gpu-node.md`
+- `docs/system-gpu-vm.md`

@@ -21,6 +21,12 @@ homelab nodes
 homelab addr NODE
 homelab ssh NODE
 homelab ping NODE
+homelab gpu NODE
+homelab pci NODE
+homelab iommu NODE
+homelab temps NODE
+homelab disks NODE
+homelab virt NODE
 homelab status NODE [UNIT]
 homelab logs NODE [UNIT]
 homelab k3s NODE [K3S_ARGS...]

@@ -5,11 +5,13 @@ Reusable NixOS modules imported by every host.
 ## Domains
 
 - `core`: baseline operating system behavior for all nodes.
+- `hardware`: IOMMU, VFIO, thermal, and disk health support.
 - `integrations`: glue for external module systems such as Home Manager and sops-nix.
 - `kubernetes`: k3s cluster configuration and Kubernetes host requirements.
 - `networking`: network stack, DNS, DHCP, and firewall defaults.
 - `nix`: Nix daemon, flakes, trusted users, cache, and garbage collection settings.
 - `security`: users, sudo, SSH, and access control.
+- `virtualization`: libvirt/QEMU/KVM host support.
 
 ## Rule of Thumb
 

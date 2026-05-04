@@ -19,16 +19,22 @@ let
   nodeList = lib.concatStringsSep " " nodeNames;
   commandList = lib.concatStringsSep " " [
     "addr"
+    "disks"
     "dry-build"
+    "gpu"
     "help"
+    "iommu"
     "k3s"
     "kubectl"
     "logs"
     "nodes"
+    "pci"
     "ping"
     "rebuild"
     "ssh"
     "status"
+    "temps"
+    "virt"
   ];
 
   nodeRows = lib.concatStringsSep "\n" (
@@ -61,6 +67,12 @@ let
       homelab addr NODE
       homelab ssh NODE [SSH_ARGS...]
       homelab ping NODE
+      homelab gpu NODE
+      homelab pci NODE
+      homelab iommu NODE
+      homelab temps NODE
+      homelab disks NODE
+      homelab virt NODE
       homelab status NODE [UNIT]
       homelab logs NODE [UNIT]
       homelab k3s NODE [K3S_ARGS...]
@@ -122,6 +134,42 @@ let
       ping)
         require_node "$@"
         exec ${pkgs.iputils}/bin/ping -c 4 "$NODE_FQDN"
+        ;;
+
+      gpu)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "nvidia-smi || nvtop --version || true"
+        ;;
+
+      pci)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "lspci -nnk"
+        ;;
+
+      iommu)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "dmesg | grep -Ei 'DMAR|IOMMU|AMD-Vi|vfio' || true; find /sys/kernel/iommu_groups -maxdepth 2 -type l 2>/dev/null | sort"
+        ;;
+
+      temps)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "sensors 2>/dev/null || true; nvidia-smi --query-gpu=temperature.gpu,power.draw,utilization.gpu,memory.used,memory.total --format=csv 2>/dev/null || true"
+        ;;
+
+      disks)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS,MODEL,SERIAL; sudo smartctl --scan 2>/dev/null || true"
+        ;;
+
+      virt)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "systemctl status libvirtd --no-pager 2>/dev/null || true; virsh list --all 2>/dev/null || true; ip link show type bridge 2>/dev/null || true"
         ;;
 
       status)
@@ -199,7 +247,7 @@ let
       fi
 
       case "''${words[1]}" in
-        addr|dry-build|k3s|logs|ping|rebuild|ssh|status)
+        addr|disks|dry-build|gpu|iommu|k3s|logs|pci|ping|rebuild|ssh|status|temps|virt)
           if [[ $cword -eq 2 ]]; then
             COMPREPLY=( $(compgen -W "$nodes" -- "$cur") )
             return

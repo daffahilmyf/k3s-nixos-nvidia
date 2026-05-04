@@ -2,12 +2,16 @@
   config,
   lib,
   networkInventory,
+  nodeInventory,
   staticNodes,
   ...
 }:
 
 let
   cfg = config.homelab.network.static;
+  bridge = nodeInventory.virtualization.bridge or { };
+  bridgeEnabled = bridge.enable or false;
+  bridgeName = bridge.name or "br0";
   domain = networkInventory.domain or null;
   hostAliases = networkInventory.hostAliases or { };
 
@@ -70,20 +74,57 @@ in
 
     systemd.network = {
       enable = true;
-      networks."10-lan" = {
-        matchConfig.Name = if cfg.enable then cfg.interface else "en* eth*";
-        address = lib.mkIf cfg.enable [
-          "${cfg.address}/${toString cfg.prefixLength}"
-        ];
-        gateway = lib.mkIf cfg.enable [
-          cfg.gateway
-        ];
-        dns = lib.mkIf cfg.enable cfg.dns;
-        networkConfig = {
-          DHCP = if cfg.enable then "no" else "ipv4";
-          IPv6AcceptRA = true;
+      netdevs = lib.mkIf bridgeEnabled {
+        "10-${bridgeName}" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = bridgeName;
+          };
         };
       };
+      networks =
+        if bridgeEnabled then
+          {
+            "10-lan-uplink" = {
+              matchConfig.Name = if cfg.enable then cfg.interface else "en* eth*";
+              networkConfig = {
+                Bridge = bridgeName;
+                DHCP = "no";
+                IPv6AcceptRA = false;
+              };
+            };
+            "20-${bridgeName}" = {
+              matchConfig.Name = bridgeName;
+              address = lib.mkIf cfg.enable [
+                "${cfg.address}/${toString cfg.prefixLength}"
+              ];
+              gateway = lib.mkIf cfg.enable [
+                cfg.gateway
+              ];
+              dns = lib.mkIf cfg.enable cfg.dns;
+              networkConfig = {
+                DHCP = if cfg.enable then "no" else "ipv4";
+                IPv6AcceptRA = true;
+              };
+            };
+          }
+        else
+          {
+            "10-lan" = {
+              matchConfig.Name = if cfg.enable then cfg.interface else "en* eth*";
+              address = lib.mkIf cfg.enable [
+                "${cfg.address}/${toString cfg.prefixLength}"
+              ];
+              gateway = lib.mkIf cfg.enable [
+                cfg.gateway
+              ];
+              dns = lib.mkIf cfg.enable cfg.dns;
+              networkConfig = {
+                DHCP = if cfg.enable then "no" else "ipv4";
+                IPv6AcceptRA = true;
+              };
+            };
+          };
     };
 
     services.resolved.enable = true;
