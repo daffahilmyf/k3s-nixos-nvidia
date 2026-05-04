@@ -41,7 +41,7 @@
           modules = [
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
-            ./modules/system
+            ./modules
             ./hosts/${hostname}
           ] ++ extraModules;
         };

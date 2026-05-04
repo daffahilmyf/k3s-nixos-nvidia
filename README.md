@@ -27,7 +27,11 @@ hosts/
   default/
   gpu-worker-1/
 modules/
-  system/
+  core/
+  integrations/
+  networking/
+  nix/
+  security/
 profiles/
   hardware/
   roles/
@@ -37,7 +41,12 @@ secrets/
 ```
 
 - `hosts/<hostname>` contains host-specific hardware and hostname wiring.
-- `modules/system` contains shared NixOS defaults used by every host.
+- `modules` contains shared NixOS modules used by every host.
+- `modules/core` contains base OS defaults, boot, locale, and common CLI packages.
+- `modules/integrations` wires external NixOS modules such as Home Manager and sops-nix.
+- `modules/networking` contains networkd, DHCP, DNS, and firewall defaults.
+- `modules/nix` contains Nix daemon, flakes, trusted users, and garbage collection settings.
+- `modules/security` contains SSH, sudo, and user configuration.
 - `profiles/roles` contains role-specific configuration.
 - `profiles/hardware` contains hardware-specific configuration such as NVIDIA.
 - `home/users` contains CLI-only Home Manager configuration.
