@@ -67,6 +67,7 @@ secrets/
 - `hosts/<hostname>` contains host-specific hardware and hostname wiring.
 - `inventory` contains node facts such as role and static IP address.
 - `inventory/network.nix` contains LAN settings, the `home.arpa` domain, and the Kubernetes API endpoint.
+- `inventory/kubernetes.nix` contains cluster-wide Kubernetes settings such as the k3s package.
 - `lib` contains flake helper functions and role-to-profile mapping.
 - `modules` contains shared NixOS modules used by every host.
 - `modules/core` contains base OS defaults, boot, locale, and common CLI packages.
@@ -133,3 +134,5 @@ The k3s module disables bundled `servicelb` and `traefik` by default so ingress 
 Static node records are generated as both short names and `home.arpa` names, for example `control-plane` and `control-plane.home.arpa`.
 
 The Kubernetes API endpoint defaults to `https://control-plane.home.arpa:6443`.
+
+The k3s package is selected in `inventory/kubernetes.nix`, currently as `pkgs.k3s` from the pinned nixpkgs input so all nodes use the same version.

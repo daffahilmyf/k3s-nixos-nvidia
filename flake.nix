@@ -28,6 +28,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
       lan = import ./inventory/network.nix;
       nodes = import ./inventory/nodes.nix;
+      kubernetes = import ./inventory/kubernetes.nix { inherit pkgs; };
       homelabCli = import ./lib/homelab-cli.nix {
         inherit pkgs nodes;
         lib = nixpkgs.lib;
@@ -43,6 +44,7 @@
           username
           lan
           nodes
+          kubernetes
           ;
       };
     in

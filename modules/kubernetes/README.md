@@ -6,6 +6,8 @@ This domain configures k3s and the host settings Kubernetes expects.
 
 `k3s.nix` provides `homelab.k3s.*` options and maps them to NixOS `services.k3s`.
 
+The package defaults to `inventory/kubernetes.nix` value `k3s.package`, currently `pkgs.k3s`.
+
 Included host requirements:
 
 - kernel modules: `br_netfilter`, `overlay`, and IPVS modules

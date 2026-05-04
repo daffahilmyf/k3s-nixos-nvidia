@@ -1,5 +1,6 @@
 {
   config,
+  kubernetesInventory,
   lib,
   networkInventory,
   pkgs,
@@ -8,6 +9,7 @@
 
 let
   cfg = config.homelab.k3s;
+  inventoryK3s = kubernetesInventory.k3s or { };
   isServer = cfg.role == "server";
   isAgent = cfg.role == "agent";
   defaultServerAddr = networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
@@ -72,6 +74,13 @@ in
       default = [ ];
       description = "Additional flags passed to k3s.";
     };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = inventoryK3s.package or pkgs.k3s;
+      defaultText = "inventory/kubernetes.nix k3s.package or pkgs.k3s";
+      description = "k3s package used by all configured k3s nodes.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -83,7 +92,7 @@ in
     ];
 
     environment.systemPackages = with pkgs; [
-      k3s
+      cfg.package
       kubectl
       kubernetes-helm
     ];
@@ -110,7 +119,7 @@ in
 
     services.k3s = {
       enable = true;
-      package = pkgs.k3s;
+      package = cfg.package;
       role = cfg.role;
       clusterInit = isServer && cfg.clusterInit;
       disable = lib.mkIf isServer cfg.disable;

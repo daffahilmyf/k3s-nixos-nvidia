@@ -7,6 +7,7 @@
   username,
   lan,
   nodes,
+  kubernetes,
 }:
 
 let
@@ -26,6 +27,7 @@ node:
 nixpkgs.lib.nixosSystem {
   inherit system;
   specialArgs = {
+    kubernetesInventory = kubernetes;
     networkInventory = lan;
     inherit inputs username hostname staticNodes;
     inherit (node) role;
