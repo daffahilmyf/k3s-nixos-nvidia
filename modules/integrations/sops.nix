@@ -15,7 +15,8 @@ in
       keyFile = systemSettings.sopsAgeKeyFile;
       generateKey = true;
     };
-  } // lib.optionalAttrs (builtins.pathExists sopsFile) {
+  }
+  // lib.optionalAttrs (builtins.pathExists sopsFile) {
     defaultSopsFile = sopsFile;
   };
 }

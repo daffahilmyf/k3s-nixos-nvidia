@@ -55,7 +55,7 @@
       };
     in
     {
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      formatter.${system} = pkgs.nixfmt-tree;
 
       packages.${system} = {
         homelab-cli = homelabCli;
@@ -79,6 +79,7 @@
           homelabCli
           kubectl
           kubernetes-helm
+          nixfmt-tree
           openssh
         ];
 

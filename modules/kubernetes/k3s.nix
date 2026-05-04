@@ -13,7 +13,8 @@ let
   tokenSecretName = inventoryK3s.token.secretName or "k3s-token";
   isServer = cfg.role == "server";
   isAgent = cfg.role == "agent";
-  defaultServerAddr = networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
+  defaultServerAddr =
+    networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
   sopsFile = ../../secrets + "/${config.networking.hostName}.yaml";
   hasHostSecrets = builtins.pathExists sopsFile;
 in
@@ -123,10 +124,7 @@ in
       disable = lib.mkIf isServer cfg.disable;
       serverAddr = lib.mkIf isAgent cfg.serverAddr;
       tokenFile = lib.mkIf (hasHostSecrets || isAgent) (
-        if hasHostSecrets then
-          config.sops.secrets.${tokenSecretName}.path
-        else
-          cfg.tokenFile
+        if hasHostSecrets then config.sops.secrets.${tokenSecretName}.path else cfg.tokenFile
       );
       nodeLabel = cfg.nodeLabels;
       nodeTaint = cfg.nodeTaints;

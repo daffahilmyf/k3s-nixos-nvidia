@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   lint:
@@ -25,11 +24,15 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Enable Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Cache Nix store
+        uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 2G
 
       - name: Check formatting
-        run: nix fmt -- --check .
+        run: nix develop --command treefmt --ci
 
       - name: Run statix
         run: nix run nixpkgs#statix -- check .
@@ -50,8 +53,12 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Enable Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Cache Nix store
+        uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 4G
 
       - name: Check flake
         run: nix flake check --print-build-logs
@@ -80,8 +87,14 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Enable Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Cache Nix store
+        uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ matrix.host }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          restore-prefixes-first-match: |
+            nix-${{ runner.os }}-${{ matrix.host }}-
+            nix-${{ runner.os }}-
+          gc-max-store-size-linux: 6G
 
       - name: Build NixOS system closure
         run: nix build --no-link --print-build-logs ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"

@@ -11,19 +11,16 @@ let
   domain = networkInventory.domain or null;
   hostAliases = networkInventory.hostAliases or { };
 
-  namesFor = hostname:
-    [ hostname ] ++ lib.optional (domain != null) "${hostname}.${domain}";
+  namesFor = hostname: [ hostname ] ++ lib.optional (domain != null) "${hostname}.${domain}";
 
   nodeHosts = lib.mapAttrs' (hostname: address: {
     name = address;
     value = namesFor hostname;
   }) staticNodes;
 
-  aliasHosts = lib.mapAttrs (_: aliases:
-    lib.unique (
-      aliases
-      ++ lib.optionals (domain != null) (map (alias: "${alias}.${domain}") aliases)
-    )
+  aliasHosts = lib.mapAttrs (
+    _: aliases:
+    lib.unique (aliases ++ lib.optionals (domain != null) (map (alias: "${alias}.${domain}") aliases))
   ) hostAliases;
 in
 
