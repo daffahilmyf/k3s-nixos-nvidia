@@ -5,9 +5,9 @@ Flake-based NixOS configuration for CLI-only homelab nodes.
 ## Hosts
 
 - `default`: simple generic host for experiments or one-off machines.
-- `control-plane`: control-plane server.
-- `cpu-worker-1`: CPU-only worker node.
-- `gpu-worker-1`: NVIDIA worker node.
+- `control-plane`: control-plane server at `192.168.100.155`.
+- `cpu-worker-1`: CPU-only worker node at `192.168.100.156`.
+- `gpu-worker-1`: NVIDIA worker node at `192.168.100.157`.
 
 Build or switch a host from the target machine:
 
@@ -56,16 +56,22 @@ secrets/
 
 ## Adding Nodes
 
-Add a CPU worker by creating `hosts/cpu-worker-2` and adding it in `flake.nix`:
+Add a CPU worker by creating `hosts/cpu-worker-2` and adding it to `nodes` in `flake.nix`:
 
 ```nix
-cpu-worker-2 = mkCpuWorker "cpu-worker-2";
+cpu-worker-2 = {
+  staticIPv4 = "192.168.100.158";
+  role = "cpu-worker";
+};
 ```
 
 Add an NVIDIA worker the same way:
 
 ```nix
-gpu-worker-2 = mkGpuWorker "gpu-worker-2";
+gpu-worker-2 = {
+  staticIPv4 = "192.168.100.159";
+  role = "gpu-worker";
+};
 ```
 
 Generate real hardware config on the target machine:

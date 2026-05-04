@@ -26,70 +26,84 @@
       system = "x86_64-linux";
       username = "daffa";
       pkgs = nixpkgs.legacyPackages.${system};
+      lan = {
+        interface = "en* eth*";
+        prefixLength = 24;
+        gateway = "192.168.100.1";
+        dns = [
+          "1.1.1.1"
+          "8.8.8.8"
+        ];
+      };
+
+      nodes = {
+        default = {
+          role = "default";
+        };
+
+        control-plane = {
+          staticIPv4 = "192.168.100.155";
+          role = "control-plane";
+        };
+
+        cpu-worker-1 = {
+          staticIPv4 = "192.168.100.156";
+          role = "cpu-worker";
+        };
+
+        gpu-worker-1 = {
+          staticIPv4 = "192.168.100.157";
+          role = "gpu-worker";
+        };
+      };
+
+      roleModules = {
+        default = [
+          ./profiles/roles/default.nix
+        ];
+        control-plane = [
+          ./profiles/roles/control-plane.nix
+        ];
+        cpu-worker = [
+          ./profiles/roles/cpu-worker.nix
+        ];
+        gpu-worker = [
+          ./profiles/roles/gpu-worker.nix
+          ./profiles/hardware/nvidia.nix
+        ];
+      };
+
+      staticNodes = nixpkgs.lib.mapAttrs (_: node: node.staticIPv4) (
+        nixpkgs.lib.filterAttrs (_: node: node ? staticIPv4) nodes
+      );
 
       mkNode =
-        {
-          hostname,
-          role,
-          extraModules ? [ ],
-        }:
+        hostname:
+        node:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs username hostname role;
+            inherit inputs username hostname staticNodes;
+            inherit (node) role;
           };
           modules = [
             home-manager.nixosModules.home-manager
             sops-nix.nixosModules.sops
             ./modules
             ./hosts/${hostname}
-          ] ++ extraModules;
+          ]
+          ++ nixpkgs.lib.optional (node ? staticIPv4) {
+            homelab.network.static = lan // {
+              enable = true;
+              address = node.staticIPv4;
+            };
+          }
+          ++ roleModules.${node.role};
         };
-
-      mkControlPlane = hostname: mkNode {
-        inherit hostname;
-        role = "control-plane";
-        extraModules = [
-          ./profiles/roles/control-plane.nix
-        ];
-      };
-
-      mkDefaultHost = hostname: mkNode {
-        inherit hostname;
-        role = "default";
-        extraModules = [
-          ./profiles/roles/default.nix
-        ];
-      };
-
-      mkCpuWorker = hostname: mkNode {
-        inherit hostname;
-        role = "cpu-worker";
-        extraModules = [
-          ./profiles/roles/cpu-worker.nix
-        ];
-      };
-
-      mkGpuWorker = hostname: mkNode {
-        inherit hostname;
-        role = "gpu-worker";
-        extraModules = [
-          ./profiles/roles/gpu-worker.nix
-          ./profiles/hardware/nvidia.nix
-        ];
-      };
     in
     {
       formatter.${system} = pkgs.nixfmt-rfc-style;
 
-      nixosConfigurations = {
-        default = mkDefaultHost "default";
-
-        control-plane = mkControlPlane "control-plane";
-
-        cpu-worker-1 = mkCpuWorker "cpu-worker-1";
-
-        gpu-worker-1 = mkGpuWorker "gpu-worker-1";
-      };
+      nixosConfigurations = nixpkgs.lib.mapAttrs mkNode nodes;
     };
 }
