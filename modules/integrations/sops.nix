@@ -1,6 +1,7 @@
 {
   hostname,
   lib,
+  systemSettings,
   ...
 }:
 
@@ -11,7 +12,7 @@ in
 {
   sops = {
     age = {
-      keyFile = "/var/lib/sops-nix/key.txt";
+      keyFile = systemSettings.sopsAgeKeyFile;
       generateKey = true;
     };
   } // lib.optionalAttrs (builtins.pathExists sopsFile) {

@@ -119,7 +119,7 @@ sops secrets/cpu-worker-1.yaml
 sops secrets/gpu-worker-1.yaml
 ```
 
-Each node generates its local age key at `/var/lib/sops-nix/key.txt`.
+Each node generates its local age key at the path configured in `inventory/system.nix`.
 
 For k3s nodes, include the shared cluster token using the secret name from `inventory/kubernetes.nix`.
 
