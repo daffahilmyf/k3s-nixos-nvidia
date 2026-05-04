@@ -9,10 +9,9 @@
 let
   staticNodes = lib.filterAttrs (_: node: node ? staticIPv4) nodes;
   nodeNames = lib.attrNames staticNodes;
-  controlPlaneNames =
-    lib.attrNames (
-      lib.filterAttrs (_: node: node.role == "control-plane" && node ? staticIPv4) nodes
-    );
+  controlPlaneNames = lib.attrNames (
+    lib.filterAttrs (_: node: node.role == "control-plane" && node ? staticIPv4) nodes
+  );
   defaultControlPlane = if controlPlaneNames == [ ] then "" else lib.head controlPlaneNames;
   domain = network.domain or "home.arpa";
   flakePath = systemSettings.flakePath or "/etc/nixos";
@@ -35,9 +34,7 @@ let
   nodeRows = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
       hostname: node:
-      ''
-        printf "%-20s %-15s %-15s %s\n" "${hostname}" "${node.role}" "${node.staticIPv4}" "${hostname}.${domain}"
-      ''
+      ''printf "%-20s %-15s %-15s %s\n" "${hostname}" "${node.role}" "${node.staticIPv4}" "${hostname}.${domain}"''
     ) staticNodes
   );
 

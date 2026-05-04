@@ -30,7 +30,8 @@ let
   };
 
   modulesForRole =
-    role: roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
+    role:
+    roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
 in
 
 hostname:

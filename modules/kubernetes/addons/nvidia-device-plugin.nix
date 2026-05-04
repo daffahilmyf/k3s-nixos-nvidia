@@ -1,8 +1,4 @@
-{
-  kubernetesInventory,
-  lib,
-  ...
-}:
+{ kubernetesInventory, lib, ... }:
 
 let
   cfg = kubernetesInventory.addons.nvidiaDevicePlugin or { };
