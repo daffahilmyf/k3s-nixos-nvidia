@@ -145,5 +145,6 @@ The k3s token secret name, fallback token file, and disabled bundled components 
 More detail:
 
 - `docs/bootstrap.md`
+- `docs/ci.md`
 - `docs/secrets.md`
 - `docs/gpu-node.md`
