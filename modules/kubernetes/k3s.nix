@@ -10,6 +10,7 @@
 let
   cfg = config.homelab.k3s;
   inventoryK3s = kubernetesInventory.k3s or { };
+  tokenSecretName = inventoryK3s.token.secretName or "k3s-token";
   isServer = cfg.role == "server";
   isAgent = cfg.role == "agent";
   defaultServerAddr = networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
@@ -44,16 +45,13 @@ in
 
     tokenFile = lib.mkOption {
       type = lib.types.path;
-      default = "/run/secrets/k3s-token";
+      default = inventoryK3s.token.fallbackFile or "/run/secrets/k3s-token";
       description = "Path to the shared k3s cluster token.";
     };
 
     disable = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [
-        "servicelb"
-        "traefik"
-      ];
+      default = inventoryK3s.disabledComponents or [ ];
       description = "Packaged k3s components to disable.";
     };
 
@@ -98,7 +96,7 @@ in
     ];
 
     sops.secrets = lib.mkIf hasHostSecrets {
-      "k3s-token" = { };
+      ${tokenSecretName} = { };
     };
 
     boot.kernel.sysctl = {
@@ -126,7 +124,7 @@ in
       serverAddr = lib.mkIf isAgent cfg.serverAddr;
       tokenFile = lib.mkIf (hasHostSecrets || isAgent) (
         if hasHostSecrets then
-          config.sops.secrets."k3s-token".path
+          config.sops.secrets.${tokenSecretName}.path
         else
           cfg.tokenFile
       );

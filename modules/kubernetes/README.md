@@ -8,6 +8,8 @@ This domain configures k3s and the host settings Kubernetes expects.
 
 The package defaults to `inventory/kubernetes.nix` value `k3s.package`, currently `pkgs.k3s`.
 
+The default disabled bundled components and token locations also come from `inventory/kubernetes.nix`.
+
 Included host requirements:
 
 - kernel modules: `br_netfilter`, `overlay`, and IPVS modules
@@ -21,12 +23,12 @@ Included host requirements:
 
 ## Secrets
 
-If `secrets/<hostname>.yaml` exists, this module expects a `k3s-token` secret and passes it to k3s.
+If `secrets/<hostname>.yaml` exists, this module expects the token secret named in `inventory/kubernetes.nix` and passes it to k3s.
 
 If no host secret file exists:
 
 - server nodes let k3s generate a token
-- agent nodes expect a token file at `/run/secrets/k3s-token`
+- agent nodes expect the fallback token file configured in `inventory/kubernetes.nix`
 
 For reproducible cluster rebuilds, prefer storing the shared token in sops for every k3s node.
 

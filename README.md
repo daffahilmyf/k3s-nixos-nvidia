@@ -121,7 +121,7 @@ sops secrets/gpu-worker-1.yaml
 
 Each node generates its local age key at `/var/lib/sops-nix/key.txt`.
 
-For k3s nodes, include the shared cluster token as `k3s-token` in each host secret file.
+For k3s nodes, include the shared cluster token using the secret name from `inventory/kubernetes.nix`.
 
 ## Kubernetes
 
@@ -131,10 +131,12 @@ Role profiles enable k3s automatically:
 - `cpu-worker-1`: k3s agent.
 - `gpu-worker-1`: k3s agent with NVIDIA container toolkit, GPU labels, and a GPU taint.
 
-The k3s module disables bundled `servicelb` and `traefik` by default so ingress and load balancing can be installed explicitly later.
+The k3s module disables bundled components listed in `inventory/kubernetes.nix` so ingress and load balancing can be installed explicitly later.
 
 Static node records are generated as both short names and `home.arpa` names, for example `control-plane` and `control-plane.home.arpa`.
 
 The Kubernetes API endpoint defaults to `https://control-plane.home.arpa:6443`.
 
 The k3s package is selected in `inventory/kubernetes.nix`, currently as `pkgs.k3s` from the pinned nixpkgs input so all nodes use the same version.
+
+The k3s token secret name, fallback token file, and disabled bundled components are also configured in `inventory/kubernetes.nix`.
