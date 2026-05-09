@@ -31,8 +31,10 @@ Useful commands:
 homelab nodes
 homelab ssh control-plane
 homelab ping cpu-worker-1
+homelab routes gpu-worker-1
 homelab status gpu-worker-1 k3s
 homelab logs control-plane k3s
+homelab exporter gpu-worker-1
 homelab kubectl get nodes -o wide
 homelab dry-build cpu-worker-1
 homelab rebuild gpu-worker-1 switch
@@ -68,6 +70,7 @@ secrets/
 - `inventory` contains node facts such as role and static IP address.
 - `inventory/network.nix` contains LAN settings, the `home.arpa` domain, and the Kubernetes API endpoint.
 - `inventory/kubernetes.nix` contains cluster-wide Kubernetes settings such as the k3s package.
+- `inventory/infra.nix` contains shared host infrastructure defaults such as storage, backups, Tailscale, observability, power, and recovery.
 - `inventory/security.nix` contains SSH and sudo hardening defaults.
 - `inventory/system.nix` contains shared system defaults.
 - `inventory/users.nix` contains user inventory.
@@ -78,6 +81,7 @@ secrets/
 - `modules/kubernetes` contains k3s configuration and Kubernetes host requirements.
 - `modules/networking` contains networkd, DHCP, DNS, and firewall defaults.
 - `modules/nix` contains Nix daemon, flakes, trusted users, and garbage collection settings.
+- `modules/backup`, `modules/storage`, `modules/remote-access`, `modules/observability`, and `modules/power` contain reusable host infrastructure modules.
 - `modules/security` contains SSH, sudo, and user configuration.
 - `profiles/roles` contains role-specific configuration.
 - `profiles/hardware` contains hardware-specific configuration such as NVIDIA.
@@ -148,4 +152,5 @@ More detail:
 - `docs/ci.md`
 - `docs/secrets.md`
 - `docs/gpu-node.md`
+- `docs/infra.md`
 - `docs/system-gpu-vm.md`

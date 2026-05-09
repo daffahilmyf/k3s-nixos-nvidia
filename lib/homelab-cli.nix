@@ -19,8 +19,10 @@ let
   nodeList = lib.concatStringsSep " " nodeNames;
   commandList = lib.concatStringsSep " " [
     "addr"
+    "backup"
     "disks"
     "dry-build"
+    "exporter"
     "gpu"
     "help"
     "iommu"
@@ -31,8 +33,10 @@ let
     "pci"
     "ping"
     "rebuild"
+    "routes"
     "ssh"
     "status"
+    "tailscale"
     "temps"
     "virt"
   ];
@@ -67,12 +71,16 @@ let
       homelab addr NODE
       homelab ssh NODE [SSH_ARGS...]
       homelab ping NODE
+      homelab routes NODE
       homelab gpu NODE
       homelab pci NODE
       homelab iommu NODE
       homelab temps NODE
       homelab disks NODE
       homelab virt NODE
+      homelab tailscale NODE
+      homelab backup NODE
+      homelab exporter NODE
       homelab status NODE [UNIT]
       homelab logs NODE [UNIT]
       homelab k3s NODE [K3S_ARGS...]
@@ -136,6 +144,12 @@ let
         exec ${pkgs.iputils}/bin/ping -c 4 "$NODE_FQDN"
         ;;
 
+      routes)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "ip -br addr; ip route; resolvectl status 2>/dev/null || true"
+        ;;
+
       gpu)
         require_node "$@"
         node="$1"
@@ -170,6 +184,24 @@ let
         require_node "$@"
         node="$1"
         exec ${pkgs.openssh}/bin/ssh "$node" "systemctl status libvirtd --no-pager 2>/dev/null || true; virsh list --all 2>/dev/null || true; ip link show type bridge 2>/dev/null || true"
+        ;;
+
+      tailscale)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "tailscale status 2>/dev/null || systemctl status tailscaled --no-pager 2>/dev/null || true"
+        ;;
+
+      backup)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "systemctl list-timers 'restic-backups-*' --no-pager 2>/dev/null || true; systemctl status restic-backups-homelab --no-pager 2>/dev/null || true"
+        ;;
+
+      exporter)
+        require_node "$@"
+        node="$1"
+        exec ${pkgs.openssh}/bin/ssh "$node" "systemctl status prometheus-node-exporter --no-pager 2>/dev/null || true; ss -lntp | grep ':9100' || true"
         ;;
 
       status)
@@ -247,7 +279,7 @@ let
       fi
 
       case "''${words[1]}" in
-        addr|disks|dry-build|gpu|iommu|k3s|logs|pci|ping|rebuild|ssh|status|temps|virt)
+        addr|backup|disks|dry-build|exporter|gpu|iommu|k3s|logs|pci|ping|rebuild|routes|ssh|status|tailscale|temps|virt)
           if [[ $cword -eq 2 ]]; then
             COMPREPLY=( $(compgen -W "$nodes" -- "$cur") )
             return
