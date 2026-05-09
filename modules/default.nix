@@ -1,14 +1,19 @@
 {
   imports = [
+    ./backup
     ./core
     ./hardware
     ./integrations
     ./kubernetes
     ./networking
     ./nix
+    ./observability
+    ./power
     ./recovery
+    ./remote-access
     ./options.nix
     ./security
+    ./storage
     ./virtualization
   ];
 }

@@ -8,6 +8,7 @@
   lan,
   nodes,
   kubernetes,
+  infra,
   security,
   systemSettings,
   users,
@@ -15,25 +16,27 @@
 
 let
   roleModules = import ./role-modules.nix;
+  infraInventory = infra;
 
   staticNodes = nixpkgs.lib.mapAttrs (_: node: node.staticIPv4) (
     nixpkgs.lib.filterAttrs (_: node: node ? staticIPv4) nodes
   );
-
-  staticNetworkDefaults = {
-    inherit (lan)
-      interface
-      prefixLength
-      gateway
-      dns
-      ;
-  };
 
   modulesForRole =
     role: roleModules.${role} or (throw "Unknown node role '${role}'. Add it to lib/role-modules.nix.");
 in
 
 hostname: node:
+let
+  staticNetworkDefaults = {
+    inherit (lan)
+      prefixLength
+      gateway
+      dns
+      ;
+    interface = node.network.interface or lan.interface;
+  };
+in
 nixpkgs.lib.nixosSystem {
   inherit system;
   specialArgs = {
@@ -45,6 +48,7 @@ nixpkgs.lib.nixosSystem {
       inputs
       username
       hostname
+      infraInventory
       staticNodes
       systemSettings
       users

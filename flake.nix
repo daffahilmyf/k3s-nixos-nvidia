@@ -27,6 +27,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
       lan = import ./inventory/network.nix;
       nodes = import ./inventory/nodes.nix;
+      infra = import ./inventory/infra.nix;
       systemSettings = import ./inventory/system.nix;
       users = import ./inventory/users.nix;
       security = import ./inventory/security.nix;
@@ -48,6 +49,7 @@
           lan
           nodes
           kubernetes
+          infra
           security
           systemSettings
           users
