@@ -15,4 +15,17 @@
     ../profiles/roles/gpu-worker.nix
     ../profiles/hardware/nvidia.nix
   ];
+
+  vm-host = [
+    ../profiles/roles/vm-host.nix
+  ];
+
+  gpu-vm-host = [
+    ../profiles/roles/gpu-vm-host.nix
+    ../profiles/hardware/nvidia.nix
+  ];
+
+  storage-host = [
+    ../profiles/roles/storage-host.nix
+  ];
 }

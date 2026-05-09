@@ -6,11 +6,25 @@
   control-plane = {
     staticIPv4 = "192.168.100.155";
     role = "control-plane";
+    hardware = {
+      cpu.vendor = "intel";
+      disks = {
+        boot = "";
+        data = [ ];
+      };
+    };
   };
 
   cpu-worker-1 = {
     staticIPv4 = "192.168.100.156";
     role = "cpu-worker";
+    hardware = {
+      cpu.vendor = "intel";
+      disks = {
+        boot = "";
+        data = [ ];
+      };
+    };
   };
 
   gpu-worker-1 = {
@@ -18,6 +32,10 @@
     role = "gpu-worker";
     hardware = {
       cpu.vendor = "intel";
+      disks = {
+        boot = "";
+        data = [ ];
+      };
       gpu = {
         vendor = "nvidia";
         mode = "host-driver";
@@ -33,5 +51,14 @@
         name = "br0";
       };
     };
+    power.nvidia = {
+      persistenced = true;
+      powerManagement = true;
+    };
+    storage.scratch.paths = [
+      "/srv"
+      "/var/lib/libvirt/images"
+      "/var/lib/gpu-workloads"
+    ];
   };
 }

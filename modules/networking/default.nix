@@ -14,6 +14,8 @@ let
   bridgeName = bridge.name or "br0";
   domain = networkInventory.domain or null;
   hostAliases = networkInventory.hostAliases or { };
+  nodeNetwork = nodeInventory.network or { };
+  routes = nodeNetwork.routes or [ ];
 
   namesFor = hostname: [ hostname ] ++ lib.optional (domain != null) "${hostname}.${domain}";
 
@@ -102,6 +104,7 @@ in
                 cfg.gateway
               ];
               dns = lib.mkIf cfg.enable cfg.dns;
+              inherit routes;
               networkConfig = {
                 DHCP = if cfg.enable then "no" else "ipv4";
                 IPv6AcceptRA = true;
@@ -119,6 +122,7 @@ in
                 cfg.gateway
               ];
               dns = lib.mkIf cfg.enable cfg.dns;
+              inherit routes;
               networkConfig = {
                 DHCP = if cfg.enable then "no" else "ipv4";
                 IPv6AcceptRA = true;

@@ -1,0 +1,3 @@
+{
+  homelab.role = "storage-host";
+}
