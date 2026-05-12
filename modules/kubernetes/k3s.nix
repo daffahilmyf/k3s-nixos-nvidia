@@ -16,6 +16,10 @@ let
   defaultServerAddr = networkInventory.kubernetes.apiServer or "https://control-plane.home.arpa:6443";
   sopsFile = ../../secrets + "/${config.networking.hostName}.yaml";
   hasHostSecrets = builtins.pathExists sopsFile;
+  serverKubeconfigFlags = lib.optionals isServer [
+    "--write-kubeconfig-group=wheel"
+    "--write-kubeconfig-mode=0640"
+  ];
 in
 
 {
@@ -126,7 +130,7 @@ in
       );
       nodeLabel = cfg.nodeLabels;
       nodeTaint = cfg.nodeTaints;
-      inherit (cfg) extraFlags;
+      extraFlags = cfg.extraFlags ++ serverKubeconfigFlags;
     };
 
     networking.firewall = {
