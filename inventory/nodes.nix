@@ -13,6 +13,7 @@
         data = [ ];
       };
     };
+    virtualization.guestAgent.enable = true;
   };
 
   cpu-worker-1 = {
@@ -25,6 +26,7 @@
         data = [ ];
       };
     };
+    virtualization.guestAgent.enable = true;
   };
 
   gpu-worker-1 = {
@@ -46,6 +48,7 @@
     };
     virtualization = {
       enable = true;
+      guestAgent.enable = true;
       bridge = {
         enable = true;
         name = "br0";

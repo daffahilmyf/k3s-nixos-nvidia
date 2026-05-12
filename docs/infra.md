@@ -72,3 +72,13 @@ Reusable VM host roles are available:
 - `storage-host`
 
 Use these roles for future non-Kubernetes infrastructure nodes.
+
+## Proxmox Guests
+
+Set this on nodes that run as Proxmox/QEMU guests so the Proxmox dashboard can read IP addresses and guest state:
+
+```nix
+virtualization.guestAgent.enable = true;
+```
+
+The option enables `services.qemuGuest` inside NixOS. Proxmox must also have the VM's `QEMU Guest Agent` option enabled.
