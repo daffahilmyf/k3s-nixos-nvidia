@@ -10,7 +10,7 @@ Example:
 
 ```nix
 gpu-worker-1 = {
-  staticIPv4 = "192.168.100.157";
+  staticIPv4 = "192.168.100.162";
   role = "gpu-worker";
   hardware = {
     cpu.vendor = "intel";

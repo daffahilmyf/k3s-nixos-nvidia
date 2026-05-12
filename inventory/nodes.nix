@@ -4,7 +4,7 @@
   };
 
   control-plane = {
-    staticIPv4 = "192.168.100.155";
+    staticIPv4 = "192.168.100.160";
     role = "control-plane";
     hardware = {
       cpu.vendor = "intel";
@@ -16,7 +16,7 @@
   };
 
   cpu-worker-1 = {
-    staticIPv4 = "192.168.100.156";
+    staticIPv4 = "192.168.100.161";
     role = "cpu-worker";
     hardware = {
       cpu.vendor = "intel";
@@ -28,7 +28,7 @@
   };
 
   gpu-worker-1 = {
-    staticIPv4 = "192.168.100.157";
+    staticIPv4 = "192.168.100.162";
     role = "gpu-worker";
     hardware = {
       cpu.vendor = "intel";
