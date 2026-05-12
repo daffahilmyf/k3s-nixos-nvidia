@@ -1,4 +1,8 @@
-{ securityInventory, ... }:
+{
+  lib,
+  securityInventory,
+  ...
+}:
 
 let
   cfg = securityInventory.ssh;
@@ -12,6 +16,9 @@ in
       PermitRootLogin = cfg.permitRootLogin;
       KbdInteractiveAuthentication = cfg.kbdInteractiveAuthentication;
     };
+    extraConfig = lib.optionalString ((cfg.allowUsers or [ ]) != [ ]) ''
+      AllowUsers ${lib.concatStringsSep " " cfg.allowUsers}
+    '';
   };
 
   networking.firewall.allowedTCPPorts = cfg.allowedTCPPorts;

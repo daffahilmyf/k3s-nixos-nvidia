@@ -1,9 +1,10 @@
 {
   sudo = {
-    wheelNeedsPassword = false;
+    wheelNeedsPassword = true;
   };
 
   ssh = {
+    allowUsers = [ "daffa" ];
     passwordAuthentication = false;
     permitRootLogin = "no";
     kbdInteractiveAuthentication = false;
