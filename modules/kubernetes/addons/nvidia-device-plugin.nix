@@ -66,6 +66,9 @@ in
                   - name: opengl-driver
                     mountPath: /usr/local/nvidia
                     readOnly: true
+                  - name: nix-store
+                    mountPath: /nix/store
+                    readOnly: true
             volumes:
               - name: device-plugin
                 hostPath:
@@ -76,6 +79,10 @@ in
               - name: opengl-driver
                 hostPath:
                   path: /run/opengl-driver
+                  type: Directory
+              - name: nix-store
+                hostPath:
+                  path: /nix/store
                   type: Directory
     '';
   };
