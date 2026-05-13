@@ -11,5 +11,8 @@
     nodeTaints = [
       "homelab.local/gpu=nvidia:NoSchedule"
     ];
+    extraFlags = [
+      "--default-runtime=nvidia"
+    ];
   };
 }

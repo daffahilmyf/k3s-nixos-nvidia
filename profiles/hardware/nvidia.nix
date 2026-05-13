@@ -21,6 +21,11 @@
   };
 
   environment.systemPackages = with pkgs; [
+    nvidia-container-toolkit
     nvtopPackages.nvidia
+  ];
+
+  systemd.services.k3s.path = with pkgs; [
+    nvidia-container-toolkit
   ];
 }
