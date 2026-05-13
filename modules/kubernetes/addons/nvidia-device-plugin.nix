@@ -49,6 +49,7 @@ in
                 imagePullPolicy: IfNotPresent
                 args:
                   - --fail-on-init-error=false
+                  - --device-discovery-strategy=nvml
                 env:
                   - name: LD_LIBRARY_PATH
                     value: /run/opengl-driver/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64
