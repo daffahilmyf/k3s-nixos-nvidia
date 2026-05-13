@@ -49,18 +49,33 @@ in
                 imagePullPolicy: IfNotPresent
                 args:
                   - --fail-on-init-error=false
+                env:
+                  - name: LD_LIBRARY_PATH
+                    value: /run/opengl-driver/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64
                 securityContext:
-                  allowPrivilegeEscalation: false
-                  capabilities:
-                    drop:
-                      - ALL
+                  privileged: true
                 volumeMounts:
                   - name: device-plugin
                     mountPath: /var/lib/kubelet/device-plugins
+                  - name: dev
+                    mountPath: /dev
+                  - name: opengl-driver
+                    mountPath: /run/opengl-driver
+                    readOnly: true
+                  - name: opengl-driver
+                    mountPath: /usr/local/nvidia
+                    readOnly: true
             volumes:
               - name: device-plugin
                 hostPath:
                   path: /var/lib/kubelet/device-plugins
+              - name: dev
+                hostPath:
+                  path: /dev
+              - name: opengl-driver
+                hostPath:
+                  path: /run/opengl-driver
+                  type: Directory
     '';
   };
 }
